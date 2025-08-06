@@ -45,33 +45,31 @@ This framework categorizes harmful outputs from large language models (LLMs) int
 
 ---
 
-## Cross-Walk Table  
-*(frozen header for scrolling)*
+## Cross-Walk Table (2025 Edition)  
+*<small>Scroll → to see all columns. Header row is frozen via HTML.</small>*
 
 <table>
 <thead>
 <tr>
-<th>Category (ID)</th>
-<th>MITRE ATLAS</th>
-<th>NIST AI RMF</th>
-<th>OWASP LLM Top 10 (2023)</th>
+<th style="position:sticky; top:0; background:#f2f2f2;">Category (ID)</th>
+<th style="position:sticky; top:0; background:#f2f2f2;">MITRE ATLAS</th>
+<th style="position:sticky; top:0; background:#f2f2f2;">NIST AI RMF v1.0</th>
+<th style="position:sticky; top:0; background:#f2f2f2;">OWASP LLM Top 10 (2025)</th>
 </tr>
 </thead>
 <tbody>
-<tr><td>CBR-01</td><td>AML.TA0001, AML.TA0005</td><td>Govern 1.1, Manage 4.1</td><td>LLM09, LLM10</td></tr>
-<tr><td>CYB-02</td><td>AML.TA0002, AML.TA0006</td><td>Map 2.3, Measure 2.4</td><td>LLM02, LLM06</td></tr>
-<tr><td>MIS-03</td><td>AML.TA0007</td><td>Measure 2.3, Manage 3.2</td><td>LLM09</td></tr>
-<tr><td>HAT-04</td><td>AML.TA0008</td><td>Govern 1.2, Measure 2.2</td><td>LLM08</td></tr>
-<tr><td>CYB-05</td><td>AML.TA0006</td><td>Measure 2.3, Manage 4.2</td><td>LLM02</td></tr>
-<tr><td>AIC-06</td><td>AML.TA0009</td><td>Map 2.4, Measure 2.5</td><td>LLM07, LLM09</td></tr>
-<tr><td>PRI-07</td><td>AML.TA0003 (Data Leakage)</td><td>Govern 1.3, Measure 2.1</td><td>LLM06</td></tr>
-<tr><td>SLF-08</td><td>AML.TA0005</td><td>Manage 4.2, Measure 2.3</td><td>LLM02</td></tr>
-<tr><td>IPV-09</td><td>AML.TA0003 (Data Leakage)</td><td>Govern 1.3 (IP Risks), Measure 2.1</td><td>LLM06</td></tr>
-<tr><td>AGN-10</td><td>AML.TA0004 (Automated Misuse)</td><td>Map 2.4, Manage 3.3</td><td>LLM05</td></tr>
+<tr><td><strong>CBR-01</strong></td><td>AML.TA0001, AML.TA0005</td><td>Govern 1.1, Manage 4.1</td><td>LLM09:2025 Misinformation</td></tr>
+<tr><td><strong>CYB-02</strong></td><td>AML.TA0002, AML.TA0006</td><td>Map 2.3, Measure 2.4</td><td>LLM05:2025 Improper Output Handling</td></tr>
+<tr><td><strong>MIS-03</strong></td><td>AML.TA0007</td><td>Measure 2.3, Manage 3.2</td><td>LLM09:2025 Misinformation</td></tr>
+<tr><td><strong>HAT-04</strong></td><td>AML.TA0008</td><td>Govern 1.2, Measure 2.2</td><td>LLM09:2025 Misinformation (subset)</td></tr>
+<tr><td><strong>CYB-05</strong></td><td>AML.TA0006</td><td>Measure 2.3, Manage 4.2</td><td>LLM05:2025 Improper Output Handling</td></tr>
+<tr><td><strong>AIC-06</strong></td><td>AML.TA0009</td><td>Map 2.4, Measure 2.5</td><td>LLM09:2025 Misinformation</td></tr>
+<tr><td><strong>PRI-07</strong></td><td>AML.TA0003</td><td>Govern 1.3, Measure 2.1</td><td>LLM02:2025 Sensitive Information Disclosure</td></tr>
+<tr><td><strong>SLF-08</strong></td><td>AML.TA0005</td><td>Manage 4.2, Measure 2.3</td><td>LLM09:2025 Misinformation (subset)</td></tr>
+<tr><td><strong>IPV-09</strong></td><td>AML.TA0003 (Data Leakage)</td><td>Govern 1.3 (IP Risks), Measure 2.1</td><td>LLM02:2025 Sensitive Information Disclosure</td></tr>
+<tr><td><strong>AGN-10</strong></td><td>AML.TA0004 (Automated Misuse)</td><td>Map 2.4, Manage 3.3</td><td>LLM06:2025 Excessive Agency</td></tr>
 </tbody>
 </table>
-
----
 
 ## Appendix: Red-Team Examples & Benchmarks *(updated)*
 
