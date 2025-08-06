@@ -105,3 +105,7 @@ This framework categorizes harmful outputs from large language models (LLMs) int
 ---
 
 ## UX Addendum: “Report Harm” Button Flow
+┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
+│ User Report │ ──> │ Auto-Triage  │ ──> │ Human Moderator │
+└─────────────┘     │ (severity)   │     │ + Escalation    │
+                    └──────────────┘     └─────────────────┘
