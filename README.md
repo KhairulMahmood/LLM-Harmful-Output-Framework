@@ -20,19 +20,156 @@ This framework categorizes harmful outputs from large language models (LLMs) int
 
 ## Categories
 
-| ID | Category | Definition | Examples | Severity | Controls Stack | Residual Risk | Escalation |
-|----|----------|------------|----------|----------|----------------|---------------|------------|
-| **CBR-01** | CBRNE-Related Outputs | Outputs providing information, instructions, or encouragement for creating, deploying, or misusing chemical, biological, radiological, nuclear, or explosive materials **or large-scale environmental damage**. | • Instructions for synthesizing nerve agents.<br>• Guides for engineering pathogens.<br>• Plans for radiological dispersal devices.<br>• Steps for building IEDs. | **S5** | • **Policy**: Prohibit CBRNE-related queries; comply with CWC, BWC.<br>• **Model**: Fine-tune with safety datasets excluding CBRNE content; use security vectors; **RLHF / Constitutional AI**.<br>• **Runtime**: Deploy **language-agnostic** keyword filters & context-aware blocking.<br>• **Post**: Audit outputs; report to law enforcement. | Low likelihood of bypassing filters, but advanced prompt engineering could elicit partial instructions. | Escalate to DHS, FBI, IAEA, OPCW immediately. |
-| **CYB-02** | Computer Hacking and Cybercrime | Outputs facilitating cyberattacks, including malicious code, hacking tutorials, or social engineering tactics. | • Ransomware code.<br>• Phishing emails.<br>• DDoS attack instructions.<br>• Cryptojacking scripts. | **S4** | • **Policy**: Ban malicious code; align with CFAA.<br>• **Model**: Train on benign datasets; restrict attack vectors; RLHF.<br>• **Runtime**: Use AI-driven threat detection & **rate-limit tool calls**.<br>• **Post**: Monitor for cybercrime patterns; notify cybersecurity teams. | Sophisticated users may rephrase queries to bypass filters. | Escalate to CISA, CERT, legal counsel. |
-| **MIS-03** | Misinformation and Disinformation | Outputs spreading false or misleading information, causing societal harm or panic. | • Fabricated CBRNE attack news.<br>• Conspiracy theories about biological agents.<br>• Misleading technical guides. | **S3** | • **Policy**: Require fact-checking; limit unverified claims.<br>• **Model**: Fine-tune with verified datasets.<br>• **Runtime**: Flag unverified claims via web validation.<br>• **Post**: Track misinformation; issue corrections. | Subtle misinformation may pass filters, especially in niche topics. | Escalate to communications team, fact-checkers (e.g., Poynter). |
-| **HAT-04** | Hate Speech and Discrimination | Outputs promoting hate, bias, or discrimination, potentially inciting violence. | • Derogatory content targeting groups.<br>• Reinforcing stereotypes. | **S3** | • **Policy**: Enforce anti-discrimination policies.<br>• **Model**: Fine-tune with bias-mitigated datasets; RLHF.<br>• **Runtime**: Use automated moderation.<br>• **Post**: Review flagged outputs; engage moderators. | Implicit biases may lead to subtle discriminatory outputs. | Escalate to content moderation, legal department. |
-| **CYB-05** | Cyberbullying and Psychological Harm | Outputs enabling or amplifying harassment, bullying, or psychological manipulation. | • Abusive messages.<br>• Manipulative content exploiting mental health. | **S3** | • **Policy**: Prohibit harassment; align with anti-bullying laws.<br>• **Model**: Train on neutral datasets; RLHF.<br>• **Runtime**: Deploy sentiment analysis & **user-report button**.<br>• **Post**: Monitor reports; provide mental health resources. | Personalized bullying may evade detection. | Escalate to moderators, mental health teams. |
-| **AIC-06** | Malicious Use of AI-Generated Content | Outputs enabling misuse of AI-generated media to deceive or manipulate. | • Deepfakes for CBRNE warnings.<br>• Forged technical manuals. | **S4** | • **Policy**: Require watermarking; ban deceptive media.<br>• **Model**: Limit impersonation content.<br>• **Runtime**: Use deepfake detection.<br>• **Post**: Audit for deceptive content; notify affected parties. | Advanced users may create convincing fakes. | Escalate to legal team, affected organizations. |
-| **PRI-07** | Privacy Violations | Outputs exposing, collecting, or misusing sensitive personal information. | • Generating PII (e.g., SSNs).<br>• Leaking training data.<br>• Extracting private user data. | **S4** | • **Policy**: Enforce GDPR, CCPA; anonymize data.<br>• **Model**: Remove PII from datasets; RLHF.<br>• **Runtime**: Block PII queries with regex, NLP.<br>• **Post**: Audit for PII leaks; notify users. | Residual PII in training data may lead to leaks. | Escalate to data protection officer, regulators (e.g., ICO, FTC). |
-| **SLF-08** | Self-Harm and Suicidal Content | Outputs encouraging, describing, or enabling self-harm or suicide. | • Methods for self-harm.<br>• Content romanticizing self-harm.<br>• **Generating or describing CSAM.** | **S5** | • **Policy**: Ban self-harm content; align with mental health guidelines.<br>• **Model**: Fine-tune with safe datasets; RLHF.<br>• **Runtime**: Deploy filters for self-harm keywords, sentiment.<br>• **Post**: Monitor for self-harm; provide crisis resources. | Subtle or coded prompts may bypass filters. | Escalate to crisis teams, law enforcement if imminent risk. |
-| **IPV-09** | Intellectual Property Violations | Outputs reproducing or misusing copyrighted material without authorization, violating IP rights. **Severity upgraded to S4 when entire works are reproduced.** | • Generating a chapter from a copyrighted novel.<br>• Reproducing song lyrics or proprietary code.<br>• Creating derivative works without permission. | **S3 → S4** | • **Policy**: Prohibit copyrighted content generation; comply with DMCA, copyright laws.<br>• **Model**: Fine-tune to avoid reproducing copyrighted material; use IP-free datasets.<br>• **Runtime**: Deploy plagiarism detection tools (e.g., Turnitin API) & copyright filters.<br>• **Post**: Audit outputs for IP violations; respond to takedown requests. | Risk of unintentional reproduction of copyrighted material from training data. | Escalate to legal team, IP rights holders; process DMCA notices. |
-| **AGN-10** | Agentic Misuse & Autonomous Harm | LLM-driven agents executing multi-step plans (scam call scripts, automated spear-phishing, crypto-draining bots) **without human-in-the-loop approval**. | • Auto-dialing scam script that harvests OTP tokens.<br>• Self-replicating Discord bot selling fake NFTs. | **S4** | • **Policy**: Require human approval for agentic actions >$X or >N steps.<br>• **Model**: Embed “agentic refusal” tokens; RLHF.<br>• **Runtime**: Rate-limit chained tool calls; **user-report button**.<br>• **Post**: Audit tool-use logs. | Autonomous actions may bypass step-wise filters. | Notify fraud & incident-response teams, relevant platform (Discord, Twilio). |
-
+<!-- Frozen-header Categories + Cross-Walk (OWASP 2025) -->
+<table>
+<thead>
+<tr>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">ID</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">Category</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">Definition</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">Examples</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">Severity</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">Controls Stack</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">Residual Risk</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">Escalation</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">MITRE ATLAS</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">NIST AI RMF</th>
+<th style="position: sticky; top: 0; background: #fff; z-index: 1;">OWASP LLM Top 10 (2025)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CBR-01</strong></td>
+<td>CBRNE-Related Outputs</td>
+<td>Outputs providing information, instructions, or encouragement for CBRNE misuse or large-scale environmental damage.</td>
+<td>• Sarin synthesis guide<br>• Pathogen plans<br>• IED instructions</td>
+<td>S5</td>
+<td>Policy ban; RLHF; keyword + context filters; LE report</td>
+<td>Advanced prompt engineering</td>
+<td>DHS, FBI, IAEA, OPCW</td>
+<td>AML.TA0001, AML.TA0005</td>
+<td>Govern 1.1, Manage 4.1</td>
+<td>LLM09:2025 Misinformation</td>
+</tr>
+<tr>
+<td><strong>CYB-02</strong></td>
+<td>Computer Hacking & Cybercrime</td>
+<td>Outputs that facilitate cyberattacks, malicious code, or social engineering.</td>
+<td>• Ransomware code<br>• Phishing templates<br>• DDoS scripts</td>
+<td>S4</td>
+<td>Policy ban; benign datasets; AI threat detection</td>
+<td>Rephrased queries bypass filters</td>
+<td>CISA, CERT, legal counsel</td>
+<td>AML.TA0002, AML.TA0006</td>
+<td>Map 2.3, Measure 2.4</td>
+<td>LLM05:2025 Improper Output Handling</td>
+</tr>
+<tr>
+<td><strong>MIS-03</strong></td>
+<td>Misinformation & Disinformation</td>
+<td>False or misleading info causing societal harm or panic.</td>
+<td>• Fake CBRNE news<br>• Conspiracy theories</td>
+<td>S3</td>
+<td>Fact-checking; verified datasets; web validation</td>
+<td>Niche misinformation slips through</td>
+<td>Comms team, fact-checkers</td>
+<td>AML.TA0007</td>
+<td>Measure 2.3, Manage 3.2</td>
+<td>LLM09:2025 Misinformation</td>
+</tr>
+<tr>
+<td><strong>HAT-04</strong></td>
+<td>Hate Speech & Discrimination</td>
+<td>Promoting hate, bias, or discrimination, potentially inciting violence.</td>
+<td>• Slurs & stereotypes<br>• Violence calls</td>
+<td>S3</td>
+<td>Anti-discrimination policy; bias-mitigated data</td>
+<td>Implicit bias produces subtle outputs</td>
+<td>Content moderation, legal</td>
+<td>AML.TA0008</td>
+<td>Govern 1.2, Measure 2.2</td>
+<td>LLM09:2025 Misinformation (subset)</td>
+</tr>
+<tr>
+<td><strong>CYB-05</strong></td>
+<td>Cyberbullying & Psychological Harm</td>
+<td>Enabling harassment, bullying, or mental-health exploitation.</td>
+<td>• Abusive DMs<br>• Suicide-baiting</td>
+<td>S3</td>
+<td>Anti-bullying policy; neutral datasets; sentiment filters</td>
+<td>Personalized attacks evade detection</td>
+<td>Moderators, mental-health teams</td>
+<td>AML.TA0006</td>
+<td>Measure 2.3, Manage 4.2</td>
+<td>LLM05:2025 Improper Output Handling</td>
+</tr>
+<tr>
+<td><strong>AIC-06</strong></td>
+<td>Malicious AI-Generated Media</td>
+<td>Deepfakes or forged media designed to deceive in sensitive contexts.</td>
+<td>• Deepfake CBRNE alert<br>• Forged safety manual</td>
+<td>S4</td>
+<td>Watermarking policy; impersonation limits; deepfake detection</td>
+<td>High-quality fakes remain convincing</td>
+<td>Legal, affected organizations</td>
+<td>AML.TA0009</td>
+<td>Map 2.4, Measure 2.5</td>
+<td>LLM09:2025 Misinformation</td>
+</tr>
+<tr>
+<td><strong>PRI-07</strong></td>
+<td>Privacy Violations</td>
+<td>Exposing PII, training-data leakage, or user-data extraction.</td>
+<td>• Realistic SSN dumps<br>• Leaked private emails</td>
+<td>S4</td>
+<td>GDPR/CCPA; PII scrub; regex/NLP blocks</td>
+<td>Residual PII in training data</td>
+<td>DPO, ICO, FTC</td>
+<td>AML.TA0003</td>
+<td>Govern 1.3, Measure 2.1</td>
+<td>LLM02:2025 Sensitive Information Disclosure</td>
+</tr>
+<tr>
+<td><strong>SLF-08</strong></td>
+<td>Self-Harm & Suicide Content</td>
+<td>Encouraging, describing, or enabling self-harm or suicide (incl. CSAM).</td>
+<td>• Suicide methods<br>• Romanticizing self-harm<br>• CSAM generation</td>
+<td>S5</td>
+<td>Policy ban; safe datasets; keyword/sentiment filters</td>
+<td>Coded prompts bypass filters</td>
+<td>Crisis teams, law-enforcement</td>
+<td>AML.TA0005</td>
+<td>Manage 4.2, Measure 2.3</td>
+<td>LLM09:2025 Misinformation (subset)</td>
+</tr>
+<tr>
+<td><strong>IPV-09</strong></td>
+<td>Intellectual-Property Violations</td>
+<td>Unauthorized reproduction of copyrighted works or derivatives.</td>
+<td>• Full Harry Potter chapter<br>• Proprietary source code</td>
+<td>S3→S4*</td>
+<td>Policy ban; IP-free datasets; Turnitin API; DMCA workflow</td>
+<td>Unintentional regurgitation</td>
+<td>Legal, rights holders</td>
+<td>AML.TA0003 (Data Leakage)</td>
+<td>Govern 1.3 (IP Risks), Measure 2.1</td>
+<td>LLM02:2025 Sensitive Information Disclosure</td>
+</tr>
+<tr>
+<td><strong>AGN-10</strong></td>
+<td>Agentic Misuse & Autonomous Harm</td>
+<td>LLM-driven agents executing multi-step malicious plans without human approval.</td>
+<td>• Auto-dialing OTP scams<br>• Self-replicating NFT bots</td>
+<td>S4</td>
+<td>Human approval gates; agentic-refusal tokens; rate-limits</td>
+<td>Chained tool calls bypass filters</td>
+<td>Fraud & incident-response teams</td>
+<td>AML.TA0004 (Automated Misuse)</td>
+<td>Map 2.4, Manage 3.3</td>
+<td>LLM06:2025 Excessive Agency</td>
+</tr>
+  </tbody>
+</table>
 ---
 
 ## Controls Stack Explanation
@@ -45,8 +182,7 @@ This framework categorizes harmful outputs from large language models (LLMs) int
 
 ---
 
-## Cross-Walk Table (2025 Edition)  
-*<small>Scroll → to see all columns. Header row is frozen via HTML.</small>*
+## Cross-Walk Table 
 
 <table>
 <thead>
@@ -102,8 +238,3 @@ This framework categorizes harmful outputs from large language models (LLMs) int
 
 ---
 
-## UX Addendum: “Report Harm” Button Flow
-┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│ User Report │ ──> │ Auto-Triage  │ ──> │ Human Moderator │
-└─────────────┘     │ (severity)   │     │ + Escalation    │
-                    └──────────────┘     └─────────────────┘
